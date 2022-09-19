@@ -3,6 +3,7 @@ import FeatherIcon from 'react-native-vector-icons/Feather';
 
 import { View } from 'react-native';
 
+import AsyncStorage from '@react-native-community/async-storage';
 import {
   Container,
   ProductContainer,
@@ -47,25 +48,23 @@ const Cart: React.FC = () => {
   }
 
   const cartTotal = useMemo(() => {
-    const total = products.reduce((accumulator, product) => {
-      const productsSubtotal = product.price * product.quantity;
+    const totalPrice = products.reduce((acc, cur) => {
+      const totalValue = cur.price * cur.quantity;
 
-      return accumulator + productsSubtotal;
+      return acc + totalValue;
     }, 0);
 
-    return formatValue(total);
+    return formatValue(totalPrice);
   }, [products]);
 
   const totalItensInCart = useMemo(() => {
-    const total = products.reduce((accumulator, product) => {
-      const productsQuantity = product.quantity;
+    const totalQuantity = products.reduce((acc, cur) => {
+      acc += cur.quantity;
 
-      return accumulator + productsQuantity;
+      return acc;
     }, 0);
 
-    return total;
-
-    return 0;
+    return totalQuantity;
   }, [products]);
 
   return (
@@ -102,21 +101,13 @@ const Cart: React.FC = () => {
                   testID={`increment-${item.id}`}
                   onPress={() => handleIncrement(item.id)}
                 >
-                  <FeatherIcon
-                    name="plus"
-                    color="rgba(16, 172, 132,1.0)"
-                    size={16}
-                  />
+                  <FeatherIcon name="plus" color="#E83F5B" size={16} />
                 </ActionButton>
                 <ActionButton
                   testID={`decrement-${item.id}`}
                   onPress={() => handleDecrement(item.id)}
                 >
-                  <FeatherIcon
-                    name="minus"
-                    color="rgba(16, 172, 132,1.0)"
-                    size={16}
-                  />
+                  <FeatherIcon name="minus" color="#E83F5B" size={16} />
                 </ActionButton>
               </ActionContainer>
             </Product>
